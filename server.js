@@ -6,7 +6,7 @@ var cheerio = require("cheerio");
 
 var db = require("./models");
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 var app = express();
 
 app.use(logger("dev"));
@@ -14,12 +14,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/mongo-assignment", { useNewUrlParser: true });
+var exphbs = require("express-handlebars");
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/mongo-assignment";
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.get("/scrape", function(req, res) {
-  axios.get("https://www.nytimes.com/").then(function(response) {
+  axios.get("https://www.gameinformer.com/").then(function(response) {
     var $ = cheerio.load(response.data);
-    $("article h2").each(function(i, element) {
+    $("div h3").each(function(i, element) {
       var result = {};
       result.title = $(this)
         .children("a")
@@ -35,8 +41,17 @@ app.get("/scrape", function(req, res) {
           console.log(err);
         });
     });
-    res.send("Scrape Complete");
+      res.send("Scrape Complete");
   });
+});
+
+app.get("/", function(req, res) {
+  db.Article.find({ favorite: false })
+    .then(function(data){
+      res.render("index", {articles: data});
+    }).catch(function(err){
+      res.status(404).send(err);
+    });
 });
 
 app.get("/articles", function(req, res) {
