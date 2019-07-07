@@ -1,0 +1,26 @@
+<h2 class="columnTitle"><a href="">Game Informer Scraper - Saved Page</a></h2>
+<section class="col-container">
+  <div class="columns">
+    <div class="column">_id</div>
+    <div class="column">Headline</div>
+    <div class="column">Summary</div>
+    <div class="column">Link</div>
+  </div>
+  {{#each article}} {{#if this.saved}}
+  <div class="columns savedArticlesCol ">
+    <div class="column headlineDiv ">{{this.headline}}</div>
+    <div class="column summaryDiv ">
+      <p class="summaryText ">{{this.summary}}</p>
+      <a href={{this.link}} alt={{this.headline}}></a>
+    </div>
+    <div class="column savedbutton ">
+      <form class="saved-form " action="/api/article/{{this._id}}?_method=PUT " method="POST ">
+        <input type="hidden " name="id " value={{this._id}}>
+        <button class="{{this._id}}-article-unsaved btn btn-danger " data-id={{this._id}} data-comment={{this.comment}}>Saved Article</button>
+    </div>
+    <div class="column commentDiv ">
+      <span class=commentsHolder></span>
+    </div>
+    {{/if}}{{/each}}
+
+</section>

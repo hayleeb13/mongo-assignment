@@ -42,6 +42,7 @@ app.get("/scrape", function(req, res) {
         });
     });
       res.send("Scrape Complete");
+      res.redirect("/");
   });
 });
 
@@ -49,6 +50,15 @@ app.get("/", function(req, res) {
   db.Article.find({ favorite: false })
     .then(function(data){
       res.render("index", {articles: data});
+    }).catch(function(err){
+      res.status(404).send(err);
+    });
+});
+
+app.get("/saved", function(req, res) {
+  db.Article.find({ favorite: true})
+    .then(function(data){
+      res.render("saved", {article: data});
     }).catch(function(err){
       res.status(404).send(err);
     });
