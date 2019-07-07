@@ -35,7 +35,7 @@ app.get("/scrape", function(req, res) {
         .attr("href");
       db.Article.create(result)
         .then(function(dbArticle) {
-          console.log(dbArticle);
+          console.log('db response', dbArticle);
         })
         .catch(function(err) {
           console.log(err);
