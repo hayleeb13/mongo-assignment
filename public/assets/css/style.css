@@ -5,6 +5,7 @@ html {
 
 body {
   margin-bottom: 80px;
+  background-image: url("../img/paper.png");
 }
 
 .card a:not([href]):not([tabindex]).scrape-new {
